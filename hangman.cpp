@@ -22,6 +22,86 @@ string g_definitions[g_MAX_WORDS];
 string g_pos[g_MAX_WORDS];
 
 
+// function prototypes
+string getRandomWord();
+string maskWord(string word);
+int getTries(int difficulty);
+void printAttempts(int tries, int difficulty);
+bool revealLetter(string word, char letter, string& current);
+string getDefinition(string word);
+string getPOS(string word);
+void gameLoop();
+
+// function definitions
+string getRandomWord() {
+    srand((unsigned) time(NULL));
+    int index = rand() % g_word_count;
+    return g_words[index];
+}
+
+string maskWord(string word) {
+    string masked = "";
+    for (int i = 0; i < word.length(); i++) {
+        masked += "_";
+    }
+    return masked;
+}
+
+int getTries(int difficulty) {
+    switch (difficulty) {
+        case 0:
+            return 9;
+        case 1:
+            return 7;
+        case 2:
+            return 5;
+        default:
+            return 0;
+    }
+}
+
+void printAttempts(int tries, int difficulty) {
+    for (int i = 0; i < tries; i++) {
+        cout << "O";
+    }
+    for (int i = 0; i < getTries(difficulty) - tries; i++) {
+        cout << "X";
+    }
+}
+
+bool revealLetter(string word, char letter, string& current) {
+    bool found = false;
+    for (int i = 0; i < word.length(); i++) {
+        if (word[i] == letter) {
+            current[i] = letter;
+            found = true;
+        }
+    }
+    return found;
+}
+
+string getDefinition(string word) {
+    ifstream file("dictionary.txt");
+    string line;
+    while (getline(file, line)) {
+        if (line.substr(0, word.length()) == word) {
+            return line.substr(word.length() + 1);
+        }
+    }
+    return "No definition found.";
+}
+
+string getPOS(string word) {
+    ifstream file("dictionary.txt");
+    string line;
+    while (getline(file, line)) {
+        if (line.substr(0, word.length()) == word) {
+            return line.substr(0, line.find_first_of(" "));
+        }
+    }
+    return "No part of speech found.";
+}
+
 // game-loop for Hangman
 void gameLoop() {
     int difficulty, tries;
