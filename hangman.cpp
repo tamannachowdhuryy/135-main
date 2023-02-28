@@ -1,3 +1,18 @@
+/*
+Author: Tamanna Chowdhury
+Course: CSCI-135
+Instructor: Genady Maryash
+Assignment: Hangman, Project D
+This will be a Hangman Game
+*/
+
+#include <iostream>
+#include <string> // stores letter or characters
+#include <cstdlib> // defines a collection of functions
+#include <fstream>
+#include <stdlib.h>
+
+using namespace std;
 // PART D
 
 const std::string DICTIONARY_FILE = "dictionary.txt";
