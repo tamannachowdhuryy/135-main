@@ -7,81 +7,19 @@ This will be a Hangman Game
 */
 
 #include <iostream>
-#include <string> // stores letter or characters
-#include <cstdlib> // defines a collection of functions
 #include <fstream>
 #include <stdlib.h>
+#include <time.h>
+#include <vector>
 
 using namespace std;
-// PART D
 
-const std::string DICTIONARY_FILE = "dictionary.txt";
+const int g_MAX_WORDS = 1000;
+int g_word_count = 0;
 
-bool loadDictionary(const std::string& filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        return false;
-    }
-
-    std::string word;
-    while (file >> word) {
-        g_words[g_word_count++] = word;
-    }
-
-    return true;
-}
-
-std::string getRandomWord() {
-    std::srand(time(nullptr));
-    int index = std::rand() % g_word_count;
-    return g_words[index];
-}
-
-std::string maskWord(const std::string& word) {
-    return string(word.length(), '_');
-}
-
-int getTries(int difficulty) {
-    switch (difficulty) {
-        case 0:
-            return 9;
-        case 1:
-            return 7;
-        case 2:
-            return 5;
-        default:
-            return 0;
-    }
-}
-
-void printAttempts(int tries, int difficulty) {
-    int maxTries = getTries(difficulty);
-    for (int i = 0; i < tries; i++) {
-        std::cout << 'O';
-    }
-    for (int i = tries; i < maxTries; i++) {
-        std::cout << 'X';
-    }
-}
-
-bool revealLetter(const std::string& word, char letter, std::string& current) {
-    bool letterFound = false;
-    for (int i = 0; i < word.length(); i++) {
-        if (word[i] == letter) {
-            current[i] = letter;
-            letterFound = true;
-        }
-    }
-    return letterFound;
-}
-
-string getDefinition(const std::string& word) {
-    // implementation for fetching definition goes here
-}
-
-string getPOS(const std::string& word) {
-    // implementation for fetching part of speech goes here
-}
+string g_words[g_MAX_WORDS];
+string g_definitions[g_MAX_WORDS];
+string g_pos[g_MAX_WORDS];
 
 
 // game-loop for Hangman
