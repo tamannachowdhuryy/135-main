@@ -261,17 +261,29 @@ bool removeWord(string word) {
 }
 
 // PART D
-// function prototypes
-string getRandomWord();
-string maskWord(string word);
-int getTries(int difficulty);
-void printAttempts(int tries, int difficulty);
-bool revealLetter(string word, char letter, string& current);
-string getDefinition(string word);
-string getPOS(string word);
-void gameLoop();
 
-// function definitions
+const int EASY = 0;
+const int NORMAL = 1;
+const int HARD = 2;
+
+const int MAX_TRIES[] = {9, 7, 5};
+
+string g_words[100];
+int g_word_count = 0;
+
+void loadWords(string filename) {
+    ifstream file(filename);
+    if (file.is_open()) {
+        string line;
+        while (getline(file, line)) {
+            g_words[g_word_count] = line;
+            g_word_count++;
+        }
+    } else {
+        cout << "Unable to open file: " << filename << endl;
+    }
+}
+
 string getRandomWord() {
     srand((unsigned) time(NULL));
     int index = rand() % g_word_count;
@@ -287,24 +299,17 @@ string maskWord(string word) {
 }
 
 int getTries(int difficulty) {
-    switch (difficulty) {
-        case 0:
-            return 9;
-        case 1:
-            return 7;
-        case 2:
-            return 5;
-        default:
-            return 0;
-    }
+    return MAX_TRIES[difficulty];
 }
 
 void printAttempts(int tries, int difficulty) {
-    for (int i = 0; i < tries; i++) {
-        cout << "O";
-    }
-    for (int i = 0; i < getTries(difficulty) - tries; i++) {
-        cout << "X";
+    int max_tries = MAX_TRIES[difficulty];
+    for (int i = 0; i < max_tries; i++) {
+        if (i < tries) {
+            cout << "O";
+        } else {
+            cout << "X";
+        }
     }
 }
 
@@ -319,27 +324,55 @@ bool revealLetter(string word, char letter, string& current) {
     return found;
 }
 
-string getDefinition(string word) {
-    ifstream file("dictionary.txt");
-    string line;
-    while (getline(file, line)) {
-        if (line.substr(0, word.length()) == word) {
-            return line.substr(word.length() + 1);
+// game-loop for Hangman
+void gameLoop() {
+    int difficulty, tries;
+    string word, current;
+    char letter;
+    while (true) {
+        cout << "Welcome to Hangman!" << endl;
+        cout <<  "0. easy\n1. normal\n2. hard\n3. exit\nChoose a difficulty: ";
+        cin >> difficulty;
+        while (difficulty < 0 || difficulty > 3) {
+            cout <<  "Enough horseplay >_< !\n0. easy\n1. normal\n2. hard\n3. exit\nChoose a difficulty: ";
+            cin >> difficulty;
+        }
+        if (difficulty == 3) {
+            cout << "If you're hangry, go grab a bite! See what I did there?" << endl;
+            break;
+        }
+        word = getRandomWord();
+        current = maskWord(word);
+        tries = getTries(difficulty);
+        while (tries != 0) {
+            cout << "Life: ";
+            printAttempts(tries, difficulty);
+            cout << endl << "Word: "<< current << endl;
+            cout << "Enter a letter: ";
+            cin >> letter;
+            
+            if (!revealLetter(word, letter, current)) {
+                tries--;
+            }
+            if (current == word) {
+                break;
+            }
+            if (tries == 2) {
+                cout << "The part of speech of the word is "<< getPOS(word) << endl;
+            }
+            if (tries == 1) {
+                cout << "Definition of the word: " << getDefinition(word) << endl;
+            }
+        }
+        if (tries == 0) {
+            cout << "The word is \"" << word << "\". Better luck next time! You're getting the ..ahem.. hang of it." << endl;
+        }
+        else {
+            cout << "Congrats!!!" << endl;
         }
     }
-    return "No definition found.";
 }
 
-string getPOS(string word) {
-    ifstream file("dictionary.txt");
-    string line;
-    while (getline(file, line)) {
-        if (line.substr(0, word.length()) == word) {
-            return line.substr(0, line.find_first_of(" "));
-        }
-    }
-    return "No part of speech found.";
-}
 
 // game-loop for Hangman
 void gameLoop() {
