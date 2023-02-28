@@ -14,15 +14,6 @@ This will be a Hangman Game
 
 using namespace std;
 
-
-
-const int g_MAX_WORDS = 1000;
-int g_word_count = 0;
-
-string g_words[g_MAX_WORDS];
-string g_definitions[g_MAX_WORDS];
-string g_pos[g_MAX_WORDS];
-
 // PART A
 const int g_MAX_WORDS = 1000;
 int g_word_count = 0;
@@ -77,7 +68,7 @@ void readWords(string filename) {
 
 // this is the main function where i can see if it prints out what gradescope is
 // looking for
-
+/*
 int main() {
   readWords("dictionary.tsv");
 
@@ -103,7 +94,7 @@ int main() {
 
   return 0;
 }
-
+*/
 // PART B
 
 /*
