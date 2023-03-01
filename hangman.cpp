@@ -264,12 +264,24 @@ bool removeWord(string word) {
   return true;
 }
 
-// PART D
+// PART D : FINAL GAME
+
 string getRandomWord() {
   srand((unsigned)time(NULL));
   int index = rand() % g_word_count;
   return g_words[index];
 }
+
+/*
+    @param            :   The string with a word from the dictionary 
+    @return           :   string of "_" based on the number of
+                          characters in the given `word` 
+    @post             :   Return string of "_" based on the length
+                          of the given `word`.
+                          For example, if the word is "game", then
+                          the function would return "____". In other
+                          words, a string of four "_"s.
+*/
 
 string maskWord(string word) {
   string masked_word;
@@ -278,6 +290,16 @@ string maskWord(string word) {
   }
   return masked_word;
 }
+
+/*
+    @param            :   The integer for the difficulty of the game
+                          (0 for easy, 1 for normal, and 2 for hard) 
+    @return           :   The number of tries given the `difficulty`
+                          (9 for easy, 7 for normal, and 5 for hard)
+    @post             :   Return the number of tries based on given
+                          difficulty (0-easy: 9 tries, 1-normal: 7
+                          tries, 2-Hard: 5 tries) 
+*/
 
 int getTries(int difficulty) {
   if (difficulty == 0) {
@@ -291,6 +313,23 @@ int getTries(int difficulty) {
   }
 }
 
+/*
+    @param tries      :   The integer for remaining tries 
+    @param difficulty :   The integer for the difficulty of the game 
+                          (0 for easy, 1 for normal, and 2 for hard) 
+    @post             :   prints the number of lives left and number
+                          of lives used using "O" and "X". DO NOT
+                          PRINT AN ENDLINE
+
+    For example : calling `printAttemps(2, 1)` would print "OOXXXXX". 
+                  Based on given `difficulty`, we know the total tries
+                  is 7 (from `getTries(1)`). Also, the player has 2
+                  `tries` remaining based on the given parameter.
+                  Therefore, the function prints two "0"s to indicate
+                  the remaining tries and 5 "X"s to indicate the tries
+                  that have been used (7-2=5)          
+*/
+
 void printAttempts(int tries, int difficulty) {
   for (int i = 0; i < tries; i++) {
     cout << "O";
@@ -299,6 +338,29 @@ void printAttempts(int tries, int difficulty) {
     cout << "X";
   }
 }
+
+/*
+    @param word       :   The string word from the dictionary
+    @param letter     :   The char letter that that will be revealed
+    @param(&) current :   The string representing a masked word
+    @return           :   `true` if the `letter` exists in `word`,
+                          otherwise return `false`  
+    @post             :   If the given `letter` exists in `word`
+                          reveal the `letter` in `current` masked word
+                          and return `true`. Otherwise, return `false`
+
+    For example : Let's say we have the following main function:
+                  int main(){
+                      string w = "g___";
+                      cout << revealLetter("good", 'o', "g___") << endl;
+                      cout <<  w << endl;
+                  }
+                  The first `cout` will print 1 because the letter 'o'
+                  exists in "good". Thus, the function returned `true`.
+                  The second `cout` will print "goo_". The variable `w`
+                  has been modified by the function to reveal all the
+                  `o`s in "good" resulting in "goo_"           
+*/
 
 bool revealLetter(string word, char letter, string &current) {
   bool is_correct = false;
@@ -363,7 +425,9 @@ void gameLoop() {
   }
 }
 
+/*
 int main() {
   gameLoop();
   return 0;
 }
+*/
